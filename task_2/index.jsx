@@ -1,7 +1,10 @@
-import { Fragment, memo } from 'react';
+import { Fragment, memo, useCallback } from 'react';
 
 const MainComponent = () => {
-    const makeLog = () => console.log('hi from MainComponent'); // function to make logs from MainComponent
+    // Проблема в том, что при каждом рендере этого компонента создается новая функция makeLog,
+    // это приводит к повторным рендерам ChildComponent, даже если его props не изменились.
+    // Чтобы починить, можно использовать useCallback для мемоизации функции makeLog
+    const makeLog = useCallback(() => console.log('hi from MainComponent'), []); // function to make logs from MainComponent
 
     return (
         <Fragment>

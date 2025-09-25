@@ -1,48 +1,44 @@
 import { useState } from "react";
 
-export const Block1 = ({ mouseEnterCallbak, imgSrc, imgAlt }) => {
+// В качестве решения решил использовать обёртку
+
+const RawBlock1 = ({ imgSrc, imgAlt }) => <img src={imgSrc} alt={imgAlt} />;
+
+const RawBlock2 = ({ content }) => <p>{content}</p>;
+
+const RawBlock3 = ({ userData }) =>
+    <address>
+      country: {userData.country}, street: {userData.street}
+    </address>;
+
+const BlockWrapper = ({ mouseEnterCallback, children }) => {
   const [isActive, setActive] = useState(false);
 
   const mouseEnterHandler = () => {
     setActive(true);
-    mouseEnterCallbak();
+    mouseEnterCallback();
   };
 
   return (
     <div onMouseEnter={mouseEnterHandler} className={isActive ? "active" : ""}>
-      <img src={imgSrc} alt={imgAlt} />
+      {children}
     </div>
   );
 };
 
-export const Block2 = ({ mouseEnterCallbak, content }) => {
-  const [isActive, setActive] = useState(false);
+export const Block1 = (props) => (
+  <BlockWrapper {...props}>
+    <RawBlock1 {...props} />
+  </BlockWrapper>
+);
 
-  const mouseEnterHandler = () => {
-    setActive(true);
-    mouseEnterCallbak();
-  };
-
-  return (
-    <div onMouseEnter={mouseEnterHandler} className={isActive ? "active" : ""}>
-      <p>{content}</p>
-    </div>
-  );
-};
-
-export const Block3 = ({ mouseEnterCallbak, userData }) => {
-  const [isActive, setActive] = useState(false);
-
-  const mouseEnterHandler = () => {
-    setActive(true);
-    mouseEnterCallbak();
-  };
-
-  return (
-    <div onMouseEnter={mouseEnterHandler} className={isActive ? "active" : ""}>
-      <address>
-        country: {userData.country}, street: {userData.street}
-      </address>
-    </div>
-  );
-};
+export const Block2 = (props) => (
+  <BlockWrapper {...props}>
+    <RawBlock2 {...props} />
+  </BlockWrapper>
+);
+export const Block3 = (props) => (
+  <BlockWrapper {...props}>
+    <RawBlock3 {...props} />
+  </BlockWrapper>
+);

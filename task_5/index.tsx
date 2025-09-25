@@ -2,13 +2,16 @@
 
 import { useState } from 'react';
 import useSWR from 'swr';
-
 import styles from './page.module.css';
-
 import { fetchOnePost } from '@/libs/fetchOnePost';
 
+// Здесь проблема в разных ключах,
+// из-за этого компоненты пользуются разными кэшами,
+// нужно использовать одинаковый ключ для обоих компонентов
+const SWR_KEY = 'common_key';
+
 const ComponentOne = () => {
-    const { data } = useSWR('custom_key_1', fetchOnePost);
+    const { data } = useSWR(SWR_KEY, fetchOnePost);
     //...some logic
 
     return data ? (
@@ -23,7 +26,12 @@ const ComponentOne = () => {
 };
 
 const ComponentTwo = () => {
-    const { data } = useSWR('custom_key_2', () => fetchOnePost({ delayMS: 2000 }));
+    // Также отключаем ревалидацию при монтировании
+    const { data } = useSWR(SWR_KEY, fetchOnePost, {
+        revalidateIfStale: false,
+        revalidateOnMount: false,
+        revalidateOnFocus: false
+    });
     //...some logic
 
     return data ? (
